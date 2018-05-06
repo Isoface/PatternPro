@@ -1,14 +1,8 @@
 package com.hotmail.AdrianSRJose.PatternPro.Main;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
 import java.sql.Connection;
-import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,7 +23,6 @@ import com.hotmail.AdrianSRJose.PatternPro.Util.Util;
 public class PatternPro extends JavaPlugin// implements PluginMessageListener
 {
 	private static PatternPro instance;
-	private static final String xii = "2";
 	private MySQL sql;
 	//
 	@Override
@@ -37,25 +30,14 @@ public class PatternPro extends JavaPlugin// implements PluginMessageListener
 	{
 		// Instance
 		instance = this;
-		// --- Anti Leak --- //
-		if (!load()) {
-			return;
-		}
 		// ---- Principal Configuration ---- //
 		Config.load(this);
 		//
 		YamlConfiguration config = Config.getConfig();
-		if (config != null)
+		if (config != null) {
 			ConfigLoader.load(config);
-		// ----------------- //
-		////////////////////////
-		//this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-		//this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
-		////////////////////////
-		// ---- VerifyAuthMe Bungee
-		//AuthMeBungee();
-		////////////////////////
-		// ----------- Configuration Loader ---------- //
+		}
+
 		MenuConfig.load(this);
 		//
 		PCMConfig.load(this);
@@ -146,98 +128,6 @@ public class PatternPro extends JavaPlugin// implements PluginMessageListener
 		return sql;
 	}
 
-	//	private void AuthMeBungee()
-	//	{
-	//		File thisFolder = this.getDataFolder();
-	//		if (!thisFolder.exists())
-	//			thisFolder.mkdir();
-	//		//
-	//		String pluginsAddres = thisFolder.getParent();
-	//		File plugins = new File(pluginsAddres);
-	//		//
-	//		File authMeFolder = new File(plugins, "AuthMe");
-	//		if (authMeFolder != null && authMeFolder.exists() && authMeFolder.isDirectory())
-	//		{
-	//			File authMeConfig = new File(authMeFolder, "config.yml");
-	//			if (authMeConfig != null && authMeConfig.exists() && authMeConfig.isFile())
-	//			{
-	//				YamlConfiguration config = YamlConfiguration.loadConfiguration(authMeConfig);
-	//				if (config != null)
-	//				{
-	//					ConfigurationSection hooks = config.getConfigurationSection("Hooks");
-	//					if (hooks != null)
-	//					{
-	//						if (!hooks.getBoolean("bungeecord"))
-	//							return;
-	//						//
-	//						boolean seguir = true;
-	//						boolean reloadAuthMe = false;
-	//						ArrayList<String> lines = new ArrayList<String>();
-	//						//
-	//						try
-	//						{
-	//							InputStream targetStream = new FileInputStream(authMeConfig);
-	//							BufferedReader reader = new BufferedReader(new InputStreamReader(targetStream));
-	//							String line;
-	//							//
-	//							//
-	//							while ((line = reader.readLine()) != null)
-	//							{
-	//								String add = null;
-	//								//
-	//								if (line.contains("bungeecord:"))
-	//								{
-	//									if (line.contains("true"))
-	//									{
-	//										add = line.replace("true", "false");
-	//										reloadAuthMe = true;
-	//									}
-	//								}
-	//								else
-	//									add = line;
-	//								//
-	//								//
-	//								if (add != null)
-	//									lines.add(add);
-	//							}
-	//							//
-	//							reader.close();
-	//						}
-	//						catch(Exception e) { }
-	//						//
-	//						if (seguir)
-	//						{
-	//							authMeConfig.setWritable(true);
-	//							//
-	//							try 
-	//							{
-	//								BufferedWriter writer = new BufferedWriter(new FileWriter(authMeConfig));
-	//								//
-	//								for (String tw : lines)
-	//								{
-	//									writer.write(tw);
-	//									writer.newLine();
-	//								}
-	//								//
-	//								writer.close();
-	//							} 
-	//							catch (IOException ParamException) 
-	//							{
-	//								ParamException.printStackTrace();
-	//							}
-	//						}
-	//						//
-	//						////////////////////////////
-	//						if (reloadAuthMe)
-	//						{
-	//							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "authme reload");
-	//						}
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-
 	private void idioma()
 	{
 		File lang = new File(getDataFolder(), "PatternLanguage.yml");
@@ -284,121 +174,4 @@ public class PatternPro extends JavaPlugin// implements PluginMessageListener
 			e.printStackTrace();
 		}
 	}
-
-	private boolean load()
-	{
-		try 
-		{
-			URLConnection url = new URL("https://www.spigotmc.org/").openConnection();
-			url.connect();
-		} 
-		catch (Throwable x) 
-		{
-			disableNoInternet();
-			return false;
-		}
-		//
-		try
-		{
-			if (Integer.valueOf(xii) < Integer.valueOf(externalTXT()))
-			{
-				Util.print(ChatColor.RED+"This is an old version. Please download the latest version. Disabling...");
-				Bukkit.getPluginManager().disablePlugin(this);
-				return false;
-			}
-		} 
-		catch (Throwable e)
-		{
-			Util.print(ChatColor.RED+"An error occurred on attempt to Enable. Disabling...");
-			Bukkit.getPluginManager().disablePlugin(this);
-			return false;
-		}
-		//
-		return true;
-	}
-
-	private String externalTXT()
-	{
-		String x = null;
-		//
-		try 
-		{
-			URL url = new URL("https://raw.githubusercontent.com/Isoface/PluginVersions/master/PatternPro.txt");
-			//
-			URLConnection connection = null;
-			//
-			if (isMineshafterPresent())
-				connection = url.openConnection(Proxy.NO_PROXY);
-			else
-				connection = url.openConnection();
-			//
-			connection.setUseCaches(false);
-			connection.setDoOutput(true);
-			//
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String line;
-			ArrayList<String> lines = new ArrayList<String>();
-			//
-			//
-			while ((line = reader.readLine()) != null)
-			{
-				lines.add(line);
-			}
-			//
-			x = lines.get(0);
-			//
-			reader.close();
-		}
-		catch (Exception ParamException) {}
-		//
-		return x;
-	}
-
-	private void disableNoInternet() 
-	{
-		Util.print(ChatColor.RED + "You don't have a valid internet connection, please connect to the internet for the plugin to work!");
-		Bukkit.getPluginManager().disablePlugin(this);
-	}
-
-	private boolean isMineshafterPresent()
-	{
-		try 
-		{
-			Class.forName("mineshafter.MineServer");
-			return true;
-		} 
-		catch (Exception e) 
-		{
-			return false;
-		}
-	}
-
-	//	@Override
-	//    public void onPluginMessageReceived(String channel, Player player, byte[] data) 
-	//	{
-	//        /*ByteArrayDataInput in = ByteStreams.newDataInput(data);
-	//        String subchannel = in.readUTF();
-	//        if (!"AuthMe".equals(subchannel)) {
-	//            return;
-	//        }
-	//
-	//        String type = in.readUTF();
-	//        String name = in.readUTF();
-	//        switch (type) {
-	//            case MessageType.UNREGISTER:
-	//                dataSource.invalidateCache(name);
-	//                break;
-	//            case MessageType.REFRESH_PASSWORD:
-	//            case MessageType.REFRESH_QUITLOC:
-	//            case MessageType.REFRESH_EMAIL:
-	//            case MessageType.REFRESH:
-	//                dataSource.refreshCache(name);
-	//                break;
-	//            case MessageType.BUNGEE_LOGIN:
-	//                handleBungeeLogin(name);
-	//                break;
-	//            default:
-	//                ConsoleLogger.debug("Received unsupported bungeecord message type! ({0})", type);
-	//        }*/
-	//    }
 }
