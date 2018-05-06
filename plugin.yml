@@ -1,0 +1,26 @@
+main: com.hotmail.AdrianSRJose.PatternPro.Main.PatternPro
+name: PatternPro
+version: 1.0.1
+author: AdrianSR
+
+commands:
+  Pattern:
+    description: Opens the Patterns Menus.
+    usage: /Pattern [argument]
+    aliases: [pa, patt]
+
+
+permissions:
+  Pattern.Manager.Open:
+    description: Allow a player to open the Pattern Manager Menu.
+    default: false
+  
+  Pattern.On.Off:
+    description: Allow a player to enable or disable his Pattern.
+    default: false
+    
+  Pattern.TestMenu.Open:
+    description: Allow a player to Open the PatternMenu.
+    default: op
+    
+    
